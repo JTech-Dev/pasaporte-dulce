@@ -1,266 +1,301 @@
 /* ============================================================
-   DULCE STUDIO — Mode Switcher
-   Toggles between "Sweet" (normal) and "Fit" dessert worlds
+   SWEET PASSPORT — Main App
+   - Sweet / Fit mode toggle
+   - Add to cart
+   - Cart sidebar with quantity controls
+   - Checkout via mailto
    ============================================================ */
 
-const FIT_CONTENT = {
-  cheesecake: {
-    title: "Almond Cheesecake",
-    desc: "The same creamy, rich texture — built on an almond-flour crust and sweetened with erythritol. Zero compromise.",
-    cal: "210 kcal",
-    ingredients: ["Cream Cheese", "Erythritol", "Almond Flour", "Vanilla"],
-    tag: "Fit",
-    badge: "Low Carb"
-  },
-  pancakes: {
-    title: "Protein Pancake Stack",
-    desc: "Light, fluffy almond-flour pancakes with a natural maple-flavoured syrup, topped with fresh seasonal berries.",
-    cal: "240 kcal",
-    ingredients: ["Almond Flour", "Eggs", "Stevia Syrup", "Berries"],
-    tag: "Fit",
-    badge: "High Protein"
-  },
-  cinnamon: {
-    title: "Fit Cinnamon Rolls",
-    desc: "All the warmth of a classic cinnamon roll, made with almond flour dough and a stevia-sweetened cinnamon swirl.",
-    cal: "195 kcal",
-    ingredients: ["Almond Flour", "Erythritol", "Cinnamon", "Cream Cheese"],
-    tag: "Fit",
-    badge: "Sugar-Free"
-  },
-  brownie: {
-    title: "Dark Choco Brownie",
-    desc: "Dense almond-flour brownie with 85% dark chocolate and monk fruit sweetener. Rich flavour, zero sugar spike.",
-    cal: "180 kcal",
-    ingredients: ["85% Chocolate", "Almond Flour", "Monk Fruit", "Walnuts"],
-    tag: "Fit",
-    badge: "Keto-Friendly"
-  },
-  tiramisu: {
-    title: "Fit Tiramisu",
-    desc: "Layered almond-flour sponge soaked in espresso, with an erythritol-sweetened mascarpone mousse. Guilt-free heaven.",
-    cal: "190 kcal",
-    ingredients: ["Mascarpone", "Espresso", "Erythritol", "Cocoa"],
-    tag: "Fit",
-    badge: "Light"
-  },
-  cookie: {
-    title: "Almond Choco Cookie",
-    desc: "Chewy, crisp-edged cookie made entirely from almond flour and stevia, with dark chocolate chunks throughout.",
-    cal: "145 kcal",
-    ingredients: ["Almond Flour", "Stevia", "Dark Chocolate", "Coconut Oil"],
-    tag: "Fit",
-    badge: "Grain-Free"
-  }
+// ── Product Data ───────────────────────────────────────────────────────────
+
+const PRODUCTS = {
+  cheesecake: { emoji: '🍮', price: 6.50 },
+  pancakes:   { emoji: '🥞', price: 8.00 },
+  cinnamon:   { emoji: '🌀', price: 5.50 },
+  brownie:    { emoji: '🍫', price: 4.50 },
+  tiramisu:   { emoji: '☕', price: 7.00 },
+  cookie:     { emoji: '🍪', price: 3.00 },
 };
 
 const NORMAL_CONTENT = {
-  cheesecake: {
-    title: "New York Cheesecake",
-    desc: "Dense, creamy, with a buttery graham cracker crust and a silky vanilla filling.",
-    cal: "380 kcal",
-    ingredients: ["Cream Cheese", "Sugar", "Graham Cracker", "Vanilla"],
-    tag: "Classic",
-    badge: "Bestseller"
-  },
-  pancakes: {
-    title: "Fluffy Stack",
-    desc: "Sky-high pancakes with maple syrup, fresh berries, and a cloud of whipped cream.",
-    cal: "420 kcal",
-    ingredients: ["All-purpose Flour", "Eggs", "Butter", "Maple Syrup"],
-    tag: "Classic",
-    badge: "Fan Fave"
-  },
-  cinnamon: {
-    title: "Cinnamon Rolls",
-    desc: "Warm, gooey rolls with a brown sugar cinnamon swirl and thick cream cheese frosting.",
-    cal: "450 kcal",
-    ingredients: ["Flour", "Brown Sugar", "Cinnamon", "Cream Cheese"],
-    tag: "Classic",
-    badge: "Morning Pick"
-  },
-  brownie: {
-    title: "Fudge Brownie",
-    desc: "Deep dark chocolate brownie — crispy top, molten center, studded with walnut pieces.",
-    cal: "390 kcal",
-    ingredients: ["Dark Chocolate", "Sugar", "Flour", "Walnuts"],
-    tag: "Classic",
-    badge: "Staff Pick"
-  },
-  tiramisu: {
-    title: "Tiramisu",
-    desc: "Ladyfingers soaked in espresso, layered with mascarpone cream and dusted with cocoa.",
-    cal: "360 kcal",
-    ingredients: ["Mascarpone", "Espresso", "Sugar", "Cocoa"],
-    tag: "Classic",
-    badge: "New"
-  },
-  cookie: {
-    title: "Choco Chip Cookie",
-    desc: "Bakery-style cookies — crisp edges, chewy center, loaded with real chocolate chips.",
-    cal: "280 kcal",
-    ingredients: ["Butter", "Brown Sugar", "Flour", "Chocolate Chips"],
-    tag: "Classic",
-    badge: "Classic"
-  }
+  cheesecake: { title: 'New York Cheesecake',  desc: 'Dense, creamy, with a buttery graham cracker crust and a silky vanilla filling.',              cal: '380 kcal', tag: 'Classic', badge: 'Bestseller',   ingredients: ['Cream Cheese','Sugar','Graham Cracker','Vanilla'] },
+  pancakes:   { title: 'Fluffy Stack',          desc: 'Sky-high pancakes with maple syrup, fresh berries, and a cloud of whipped cream.',             cal: '420 kcal', tag: 'Classic', badge: 'Fan Fave',     ingredients: ['All-purpose Flour','Eggs','Butter','Maple Syrup'] },
+  cinnamon:   { title: 'Cinnamon Rolls',        desc: 'Warm, gooey rolls with a brown sugar cinnamon swirl and thick cream cheese frosting.',         cal: '450 kcal', tag: 'Classic', badge: 'Morning Pick', ingredients: ['Flour','Brown Sugar','Cinnamon','Cream Cheese'] },
+  brownie:    { title: 'Fudge Brownie',         desc: 'Deep dark chocolate brownie — crispy top, molten center, studded with walnut pieces.',          cal: '390 kcal', tag: 'Classic', badge: 'Staff Pick',   ingredients: ['Dark Chocolate','Sugar','Flour','Walnuts'] },
+  tiramisu:   { title: 'Tiramisu',              desc: 'Ladyfingers soaked in espresso, layered with mascarpone cream and dusted with cocoa.',          cal: '360 kcal', tag: 'Classic', badge: 'New',          ingredients: ['Mascarpone','Espresso','Sugar','Cocoa'] },
+  cookie:     { title: 'Choco Chip Cookie',     desc: 'Bakery-style cookies — crisp edges, chewy center, loaded with real chocolate chips.',           cal: '280 kcal', tag: 'Classic', badge: 'Classic',      ingredients: ['Butter','Brown Sugar','Flour','Chocolate Chips'] },
+};
+
+const FIT_CONTENT = {
+  cheesecake: { title: 'Almond Cheesecake',     desc: 'The same creamy, rich texture — built on an almond-flour crust and sweetened with erythritol.',  cal: '210 kcal', tag: 'Fit', badge: 'Low Carb',      ingredients: ['Cream Cheese','Erythritol','Almond Flour','Vanilla'] },
+  pancakes:   { title: 'Protein Pancake Stack', desc: 'Light, fluffy almond-flour pancakes with a natural maple-flavoured syrup and fresh berries.',    cal: '240 kcal', tag: 'Fit', badge: 'High Protein',  ingredients: ['Almond Flour','Eggs','Stevia Syrup','Berries'] },
+  cinnamon:   { title: 'Fit Cinnamon Rolls',    desc: 'Almond flour dough with a stevia-sweetened cinnamon swirl — all the warmth, none of the guilt.',  cal: '195 kcal', tag: 'Fit', badge: 'Sugar-Free',   ingredients: ['Almond Flour','Erythritol','Cinnamon','Cream Cheese'] },
+  brownie:    { title: 'Dark Choco Brownie',    desc: 'Dense almond-flour brownie with 85% dark chocolate and monk fruit sweetener.',                    cal: '180 kcal', tag: 'Fit', badge: 'Keto-Friendly', ingredients: ['85% Chocolate','Almond Flour','Monk Fruit','Walnuts'] },
+  tiramisu:   { title: 'Fit Tiramisu',          desc: 'Almond-flour sponge soaked in espresso with an erythritol-sweetened mascarpone mousse.',         cal: '190 kcal', tag: 'Fit', badge: 'Light',         ingredients: ['Mascarpone','Espresso','Erythritol','Cocoa'] },
+  cookie:     { title: 'Almond Choco Cookie',   desc: 'Chewy, crisp-edged cookie made from almond flour and stevia with dark chocolate chunks.',         cal: '145 kcal', tag: 'Fit', badge: 'Grain-Free',   ingredients: ['Almond Flour','Stevia','Dark Chocolate','Coconut Oil'] },
 };
 
 const HERO_CONTENT = {
-  normal: {
-    eyebrow: "Indulge your way",
-    title: "Life is short.<br><em>Eat dessert.</em>",
-    sub: "Handcrafted pastries and desserts made with love — choose your style, never compromise on taste."
-  },
-  fit: {
-    eyebrow: "Eat well, feel great",
-    title: "Same love.<br><em>Smarter ingredients.</em>",
-    sub: "All your favourite desserts, reimagined with almond flour and zero-calorie sweeteners. Same taste, lighter you."
-  }
+  normal: { eyebrow: 'Indulge your way',   title: 'Life is short.<br><em>Eat dessert.</em>',            sub: 'Handcrafted pastries and desserts made with love — choose your style, never compromise on taste.' },
+  fit:    { eyebrow: 'Eat well, feel great', title: 'Same love.<br><em>Smarter ingredients.</em>', sub: 'All your favourite desserts, reimagined with almond flour and zero-calorie sweeteners.' },
 };
 
 const MENU_CONTENT = {
-  normal: {
-    eyebrow: "Our Menu",
-    title: "This week's favourites",
-    desc: "Classic comfort desserts, baked to perfection with the finest ingredients."
-  },
-  fit: {
-    eyebrow: "Fit Menu",
-    title: "Guilt-free delights",
-    desc: "Every recipe reengineered with almond flour and zero-calorie sweeteners — built for your goals."
-  }
+  normal: { eyebrow: 'Our Menu',  title: "This week's favourites",  desc: 'Classic comfort desserts, baked to perfection with the finest ingredients.' },
+  fit:    { eyebrow: 'Fit Menu',  title: 'Guilt-free delights',     desc: 'Every recipe reengineered with almond flour and zero-calorie sweeteners.' },
 };
 
 const BANNER_CONTENT = {
-  normal: {
-    eyebrow: "The Fit Side",
-    title: "Same desserts.<br>Smarter ingredients.",
-    sub: "Every classic recipe reinvented with <strong>almond flour</strong> instead of refined flour, and <strong>zero-calorie sweeteners</strong> in place of sugar — without ever compromising on taste or texture.",
-    btn: "Switch to Fit Mode"
-  },
-  fit: {
-    eyebrow: "The Sweet Side",
-    title: "Sometimes you just<br>need the real thing.",
-    sub: "Our <strong>classic recipes</strong> use the finest traditional ingredients — real butter, real sugar, and all-purpose flour — for those moments when only the original will do.",
-    btn: "Switch to Sweet Mode"
-  }
+  normal: { eyebrow: 'The Fit Side',   title: 'Same desserts.<br>Smarter ingredients.',        sub: 'Every classic recipe reinvented with <strong>almond flour</strong> and <strong>zero-calorie sweeteners</strong> — without compromising taste.', btn: 'Switch to Fit Mode',   onclick: "setMode('fit')" },
+  fit:    { eyebrow: 'The Sweet Side', title: 'Sometimes you need<br>the real thing.',          sub: 'Our <strong>classic recipes</strong> use real butter, real sugar, and all-purpose flour — for those moments when only the original will do.',     btn: 'Switch to Sweet Mode', onclick: "setMode('normal')" },
 };
 
 // ── State ──────────────────────────────────────────────────────────────────
 let currentMode = 'normal';
+let cart = []; // [{ key, title, emoji, price, mode, qty }]
 
 // ── Helpers ────────────────────────────────────────────────────────────────
-function el(id) { return document.getElementById(id); }
+const el = id => document.getElementById(id);
+const fmt = n => '$' + n.toFixed(2);
 
-function updateCards(mode) {
+// ── Render Menu ────────────────────────────────────────────────────────────
+function renderMenu(mode) {
   const data = mode === 'fit' ? FIT_CONTENT : NORMAL_CONTENT;
-  Object.entries(data).forEach(([key, item]) => {
-    const titleEl = el(`title-${key}`);
-    const descEl  = el(`desc-${key}`);
-    const calEl   = el(`cal-${key}`);
-    const tagEl   = el(`tag-${key}`);
-    const badgeEl = el(`badge-${key}`);
-    const ingEl   = el(`ing-${key}`);
+  const grid = el('menuGrid');
+  if (!grid) return;
 
-    if (titleEl) titleEl.textContent = item.title;
-    if (descEl)  descEl.textContent  = item.desc;
-    if (calEl)   calEl.textContent   = item.cal;
-    if (tagEl)   tagEl.textContent   = item.tag;
-    if (badgeEl) badgeEl.textContent = item.badge;
-    if (ingEl) {
-      ingEl.innerHTML = item.ingredients
-        .map(i => `<span>${i}</span>`)
-        .join('');
-    }
-  });
+  grid.innerHTML = Object.entries(data).map(([key, item]) => {
+    const { emoji, price } = PRODUCTS[key];
+    return `
+      <div class="card" data-key="${key}">
+        <div class="card-image">
+          <div class="card-emoji">${emoji}</div>
+          <div class="card-badge">${item.badge}</div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag">${item.tag}</span>
+            <span class="card-cal">${item.cal}</span>
+          </div>
+          <h3 class="card-title">${item.title}</h3>
+          <p class="card-desc">${item.desc}</p>
+          <div class="card-ingredients">
+            ${item.ingredients.map(i => `<span>${i}</span>`).join('')}
+          </div>
+          <div class="card-footer">
+            <span class="card-price">${fmt(price)}</span>
+            <button class="btn-add" onclick="addToCart('${key}')">Add to cart</button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
 }
 
-function updateHero(mode) {
-  const h = HERO_CONTENT[mode];
-  const eyebrow = el('heroEyebrow');
-  const title   = el('heroTitle');
-  const sub     = el('heroSub');
-  if (eyebrow) eyebrow.textContent = h.eyebrow;
-  if (title)   title.innerHTML = h.title;
-  if (sub)     sub.textContent = h.sub;
-}
+// ── Cart Logic ─────────────────────────────────────────────────────────────
+function addToCart(key) {
+  const data = currentMode === 'fit' ? FIT_CONTENT : NORMAL_CONTENT;
+  const { emoji, price } = PRODUCTS[key];
+  const item = data[key];
+  const id = `${key}-${currentMode}`;
+  const existing = cart.find(c => c.id === id);
 
-function updateMenu(mode) {
-  const m = MENU_CONTENT[mode];
-  const eyebrow = el('menuEyebrow');
-  const title   = el('menuTitle');
-  const desc    = el('menuDesc');
-  if (eyebrow) eyebrow.textContent = m.eyebrow;
-  if (title)   title.textContent   = m.title;
-  if (desc)    desc.textContent    = m.desc;
-}
-
-function updateBanner(mode) {
-  const b = BANNER_CONTENT[mode];
-  const eyebrow = el('bannerEyebrow');
-  const title   = el('bannerTitle');
-  const sub     = el('bannerSub');
-  const btn     = el('bannerBtn');
-  if (eyebrow) eyebrow.textContent = b.eyebrow;
-  if (title)   title.innerHTML     = b.title;
-  if (sub)     sub.innerHTML       = b.sub;
-  if (btn) {
-    btn.textContent = b.btn;
-    btn.onclick = () => {
-      setMode(mode === 'fit' ? 'normal' : 'fit');
-      return false;
-    };
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({ id, key, title: item.title, emoji, price, mode: currentMode, qty: 1 });
   }
+
+  updateCartUI();
+  openCart();
+  flashCartBtn();
 }
 
-// ── Main mode setter ───────────────────────────────────────────────────────
+function removeFromCart(id) {
+  cart = cart.filter(c => c.id !== id);
+  updateCartUI();
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(c => c.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) cart = cart.filter(c => c.id !== id);
+  updateCartUI();
+}
+
+function getTotal() {
+  return cart.reduce((sum, c) => sum + c.price * c.qty, 0);
+}
+
+function updateCartUI() {
+  const count = cart.reduce((s, c) => s + c.qty, 0);
+  const countEl = el('cartCount');
+  countEl.textContent = count;
+  countEl.classList.toggle('hidden', count === 0);
+
+  const emptyEl  = el('cartEmpty');
+  const itemsEl  = el('cartItems');
+  const footerEl = el('cartFooter');
+
+  if (cart.length === 0) {
+    emptyEl.style.display  = 'flex';
+    itemsEl.style.display  = 'none';
+    footerEl.style.display = 'none';
+    return;
+  }
+
+  emptyEl.style.display  = 'none';
+  itemsEl.style.display  = 'block';
+  footerEl.style.display = 'block';
+
+  itemsEl.innerHTML = cart.map(c => `
+    <li class="cart-item">
+      <span class="ci-emoji">${c.emoji}</span>
+      <div class="ci-info">
+        <p class="ci-title">${c.title}</p>
+        <small class="ci-mode ${c.mode === 'fit' ? 'ci-fit' : 'ci-normal'}">${c.mode === 'fit' ? 'Fit' : 'Sweet'}</small>
+      </div>
+      <div class="ci-qty">
+        <button class="qty-btn" onclick="changeQty('${c.id}', -1)">−</button>
+        <span>${c.qty}</span>
+        <button class="qty-btn" onclick="changeQty('${c.id}', 1)">+</button>
+      </div>
+      <div class="ci-right">
+        <span class="ci-price">${fmt(c.price * c.qty)}</span>
+        <button class="ci-remove" onclick="removeFromCart('${c.id}')" aria-label="Remove">✕</button>
+      </div>
+    </li>`).join('');
+
+  el('cartSubtotal').textContent = fmt(getTotal());
+}
+
+// ── Cart open / close ──────────────────────────────────────────────────────
+function openCart() {
+  el('cartSidebar').classList.add('open');
+  el('cartOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCart() {
+  el('cartSidebar').classList.remove('open');
+  el('cartOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function flashCartBtn() {
+  const btn = el('cartBtn');
+  btn.classList.add('pop');
+  setTimeout(() => btn.classList.remove('pop'), 350);
+}
+
+// ── Checkout ───────────────────────────────────────────────────────────────
+function submitOrder() {
+  const name     = (el('ckName')?.value    || '').trim();
+  const email    = (el('ckEmail')?.value   || '').trim();
+  const delivery = document.querySelector('input[name="delivery"]:checked')?.value || 'Pickup';
+  const address  = (el('ckAddress')?.value || '').trim();
+  const notes    = (el('ckNotes')?.value   || '').trim();
+
+  if (!name || !email) {
+    alert('Please enter your name and email before sending.');
+    return;
+  }
+  if (delivery === 'Delivery' && !address) {
+    alert('Please enter your delivery address.');
+    return;
+  }
+  if (cart.length === 0) {
+    alert('Your cart is empty!');
+    return;
+  }
+
+  const itemLines = cart.map(c =>
+    `  • ${c.emoji} ${c.title} (${c.mode === 'fit' ? 'Fit' : 'Sweet'}) x${c.qty} — ${fmt(c.price * c.qty)}`
+  ).join('\n');
+
+  const body = [
+    `Hello Sweet Passport! 🎉`,
+    ``,
+    `I'd like to place an order:`,
+    ``,
+    `👤 Name: ${name}`,
+    `📧 Email: ${email}`,
+    `🚗 Fulfillment: ${delivery}${delivery === 'Delivery' ? '\n📍 Address: ' + address : ''}`,
+    ``,
+    `🛒 Order:`,
+    itemLines,
+    ``,
+    `💰 Total: ${fmt(getTotal())}`,
+    notes ? `\n📝 Notes: ${notes}` : '',
+    ``,
+    `Looking forward to hearing from you!`,
+  ].join('\n');
+
+  const subject = encodeURIComponent('New Order — Sweet Passport');
+  window.location.href = `mailto:brendaliortiz2@gmail.com?subject=${subject}&body=${encodeURIComponent(body)}`;
+}
+
+// ── Mode switching ─────────────────────────────────────────────────────────
 function setMode(mode) {
   if (mode === currentMode) return;
   currentMode = mode;
 
-  // Flash transition
   document.body.classList.add('switching');
   setTimeout(() => document.body.classList.remove('switching'), 300);
 
-  // Swap body class
   document.body.classList.toggle('mode-normal', mode === 'normal');
   document.body.classList.toggle('mode-fit',    mode === 'fit');
 
-  // Update content
-  updateHero(mode);
-  updateMenu(mode);
-  updateCards(mode);
-  updateBanner(mode);
-}
+  // Hero
+  const h = HERO_CONTENT[mode];
+  if (el('heroEyebrow')) el('heroEyebrow').textContent = h.eyebrow;
+  if (el('heroTitle'))   el('heroTitle').innerHTML     = h.title;
+  if (el('heroSub'))     el('heroSub').textContent     = h.sub;
 
-// ── Toggle click ───────────────────────────────────────────────────────────
-function initToggle() {
-  const toggle = el('modeToggle');
-  if (!toggle) return;
-  toggle.addEventListener('click', () => {
-    setMode(currentMode === 'normal' ? 'fit' : 'normal');
-  });
-}
+  // Menu header
+  const m = MENU_CONTENT[mode];
+  if (el('menuEyebrow')) el('menuEyebrow').textContent = m.eyebrow;
+  if (el('menuTitle'))   el('menuTitle').textContent   = m.title;
+  if (el('menuDesc'))    el('menuDesc').textContent    = m.desc;
 
-// ── Add-to-cart micro-interaction ──────────────────────────────────────────
-function initAddButtons() {
-  document.querySelectorAll('.btn-add').forEach(btn => {
-    btn.addEventListener('click', function () {
-      const prev = this.textContent;
-      this.textContent = '✓ Added!';
-      this.style.background = 'var(--accent)';
-      this.style.color = '#fff';
-      setTimeout(() => {
-        this.textContent = prev;
-        this.style.background = '';
-        this.style.color = '';
-      }, 1400);
-    });
-  });
+  // Cards
+  renderMenu(mode);
+
+  // Banner
+  const b = BANNER_CONTENT[mode];
+  if (el('bannerEyebrow')) el('bannerEyebrow').textContent = b.eyebrow;
+  if (el('bannerTitle'))   el('bannerTitle').innerHTML     = b.title;
+  if (el('bannerSub'))     el('bannerSub').innerHTML       = b.sub;
+  if (el('bannerBtn')) {
+    el('bannerBtn').textContent = b.btn;
+    el('bannerBtn').setAttribute('onclick', `${b.onclick}; return false;`);
+  }
 }
 
 // ── Init ───────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  initToggle();
-  initAddButtons();
+  renderMenu('normal');
+  updateCartUI();
+
+  // Toggle
+  el('modeToggle')?.addEventListener('click', () => setMode(currentMode === 'normal' ? 'fit' : 'normal'));
+
+  // Cart open/close
+  el('cartBtn')?.addEventListener('click', openCart);
+  el('cartClose')?.addEventListener('click', closeCart);
+  el('cartOverlay')?.addEventListener('click', closeCart);
+
+  // Checkout button
+  el('checkoutBtn')?.addEventListener('click', submitOrder);
+
+  // Delivery toggle
+  document.querySelectorAll('input[name="delivery"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      const wrap = el('ckAddressWrap');
+      if (wrap) wrap.style.display = radio.value === 'Delivery' ? 'block' : 'none';
+    });
+  });
+
+  // Keyboard close
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCart(); });
 });

@@ -3,16 +3,57 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dulce Studio — Sweet & Fit Desserts</title>
+  <title>Sweet Passport — Sweet & Fit Desserts</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="mode-normal">
 
+  <!-- CART OVERLAY -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+
+  <!-- CART SIDEBAR -->
+  <aside class="cart-sidebar" id="cartSidebar" aria-label="Shopping cart">
+    <div class="cart-header">
+      <h2 class="cart-title">Your Cart</h2>
+      <button class="cart-close" id="cartClose" aria-label="Close cart">✕</button>
+    </div>
+
+    <div class="cart-empty" id="cartEmpty">
+      <span>🛒</span>
+      <p>Your cart is empty</p>
+      <small>Add something delicious from the menu!</small>
+    </div>
+
+    <ul class="cart-items" id="cartItems"></ul>
+
+    <div class="cart-footer" id="cartFooter" style="display:none;">
+      <div class="cart-subtotal">
+        <span>Subtotal</span>
+        <strong id="cartSubtotal">$0.00</strong>
+      </div>
+
+      <div class="checkout-form">
+        <h3 class="checkout-title">Complete your order</h3>
+        <input type="text" id="ckName" placeholder="Full name" class="ck-input" />
+        <input type="email" id="ckEmail" placeholder="Email address" class="ck-input" />
+        <div class="ck-radio-group">
+          <label class="ck-radio"><input type="radio" name="delivery" value="Pickup" checked /> 🏪 Pickup</label>
+          <label class="ck-radio"><input type="radio" name="delivery" value="Delivery" /> 🚗 Delivery</label>
+        </div>
+        <div id="ckAddressWrap" style="display:none;">
+          <input type="text" id="ckAddress" placeholder="Delivery address" class="ck-input" />
+        </div>
+        <textarea id="ckNotes" placeholder="Notes: allergies, special requests…" class="ck-input ck-textarea"></textarea>
+        <button class="btn btn-primary checkout-btn" id="checkoutBtn">📧 Send Order via Email</button>
+      </div>
+    </div>
+  </aside>
+
   <!-- NAV -->
   <nav class="nav">
-    <div class="nav-logo">dulce <span class="logo-accent">studio</span></div>
+    <div class="nav-logo">sweet <span class="logo-accent">passport</span></div>
     <div class="mode-toggle" id="modeToggle" role="switch" aria-label="Switch between Normal and Fit mode">
       <span class="toggle-label label-normal">Sweet</span>
       <div class="toggle-track">
@@ -23,8 +64,12 @@
     <ul class="nav-links">
       <li><a href="#menu">Menu</a></li>
       <li><a href="#about">About</a></li>
-      <li><a href="#order" class="nav-cta">Order Now</a></li>
+      <li><a href="#order">Order</a></li>
     </ul>
+    <button class="cart-btn" id="cartBtn" aria-label="Open cart">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <span class="cart-count hidden" id="cartCount">0</span>
+    </button>
   </nav>
 
   <!-- HERO -->
@@ -53,25 +98,13 @@
 
   <!-- INTRO STRIP -->
   <section class="intro-strip">
-    <div class="strip-item">
-      <span class="strip-icon">🍰</span>
-      <span>Classic recipes</span>
-    </div>
+    <div class="strip-item"><span class="strip-icon">🍰</span><span>Classic recipes</span></div>
     <div class="strip-divider"></div>
-    <div class="strip-item">
-      <span class="strip-icon">✨</span>
-      <span>Made fresh daily</span>
-    </div>
+    <div class="strip-item"><span class="strip-icon">✨</span><span>Made fresh daily</span></div>
     <div class="strip-divider"></div>
-    <div class="strip-item">
-      <span class="strip-icon">🌿</span>
-      <span>Fit alternatives</span>
-    </div>
+    <div class="strip-item"><span class="strip-icon">🌿</span><span>Fit alternatives</span></div>
     <div class="strip-divider"></div>
-    <div class="strip-item">
-      <span class="strip-icon">💛</span>
-      <span>Zero compromise</span>
-    </div>
+    <div class="strip-item"><span class="strip-icon">💛</span><span>Zero compromise</span></div>
   </section>
 
   <!-- MENU SECTION -->
@@ -81,148 +114,7 @@
       <h2 class="section-title" id="menuTitle">This week's favourites</h2>
       <p class="section-desc" id="menuDesc">Classic comfort desserts, baked to perfection with the finest ingredients.</p>
     </div>
-
-    <div class="menu-grid">
-
-      <!-- CHEESECAKE -->
-      <div class="card" data-category="cheesecake">
-        <div class="card-image">
-          <div class="card-emoji">🍮</div>
-          <div class="card-badge" id="badge-cheesecake">Bestseller</div>
-        </div>
-        <div class="card-body">
-          <div class="card-meta">
-            <span class="card-tag" id="tag-cheesecake">Classic</span>
-            <span class="card-cal" id="cal-cheesecake">380 kcal</span>
-          </div>
-          <h3 class="card-title" id="title-cheesecake">New York Cheesecake</h3>
-          <p class="card-desc" id="desc-cheesecake">Dense, creamy, with a buttery graham cracker crust and a silky vanilla filling.</p>
-          <div class="card-ingredients" id="ing-cheesecake">
-            <span>Cream Cheese</span><span>Sugar</span><span>Graham Cracker</span><span>Vanilla</span>
-          </div>
-          <div class="card-footer">
-            <span class="card-price">$6.50</span>
-            <button class="btn-add">Add to cart</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- PANCAKES -->
-      <div class="card" data-category="pancakes">
-        <div class="card-image">
-          <div class="card-emoji">🥞</div>
-          <div class="card-badge" id="badge-pancakes">Fan Fave</div>
-        </div>
-        <div class="card-body">
-          <div class="card-meta">
-            <span class="card-tag" id="tag-pancakes">Classic</span>
-            <span class="card-cal" id="cal-pancakes">420 kcal</span>
-          </div>
-          <h3 class="card-title" id="title-pancakes">Fluffy Stack</h3>
-          <p class="card-desc" id="desc-pancakes">Sky-high pancakes with maple syrup, fresh berries, and a cloud of whipped cream.</p>
-          <div class="card-ingredients" id="ing-pancakes">
-            <span>All-purpose Flour</span><span>Eggs</span><span>Butter</span><span>Maple Syrup</span>
-          </div>
-          <div class="card-footer">
-            <span class="card-price">$8.00</span>
-            <button class="btn-add">Add to cart</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- CINNAMON ROLLS -->
-      <div class="card" data-category="cinnamon">
-        <div class="card-image">
-          <div class="card-emoji">🌀</div>
-          <div class="card-badge" id="badge-cinnamon">Morning Pick</div>
-        </div>
-        <div class="card-body">
-          <div class="card-meta">
-            <span class="card-tag" id="tag-cinnamon">Classic</span>
-            <span class="card-cal" id="cal-cinnamon">450 kcal</span>
-          </div>
-          <h3 class="card-title" id="title-cinnamon">Cinnamon Rolls</h3>
-          <p class="card-desc" id="desc-cinnamon">Warm, gooey rolls with a brown sugar cinnamon swirl and thick cream cheese frosting.</p>
-          <div class="card-ingredients" id="ing-cinnamon">
-            <span>Flour</span><span>Brown Sugar</span><span>Cinnamon</span><span>Cream Cheese</span>
-          </div>
-          <div class="card-footer">
-            <span class="card-price">$5.50</span>
-            <button class="btn-add">Add to cart</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- BROWNIE -->
-      <div class="card" data-category="brownie">
-        <div class="card-image">
-          <div class="card-emoji">🍫</div>
-          <div class="card-badge" id="badge-brownie">Staff Pick</div>
-        </div>
-        <div class="card-body">
-          <div class="card-meta">
-            <span class="card-tag" id="tag-brownie">Classic</span>
-            <span class="card-cal" id="cal-brownie">390 kcal</span>
-          </div>
-          <h3 class="card-title" id="title-brownie">Fudge Brownie</h3>
-          <p class="card-desc" id="desc-brownie">Deep dark chocolate brownie — crispy top, molten center, studded with walnut pieces.</p>
-          <div class="card-ingredients" id="ing-brownie">
-            <span>Dark Chocolate</span><span>Sugar</span><span>Flour</span><span>Walnuts</span>
-          </div>
-          <div class="card-footer">
-            <span class="card-price">$4.50</span>
-            <button class="btn-add">Add to cart</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- TIRAMISU -->
-      <div class="card" data-category="tiramisu">
-        <div class="card-image">
-          <div class="card-emoji">☕</div>
-          <div class="card-badge" id="badge-tiramisu">New</div>
-        </div>
-        <div class="card-body">
-          <div class="card-meta">
-            <span class="card-tag" id="tag-tiramisu">Classic</span>
-            <span class="card-cal" id="cal-tiramisu">360 kcal</span>
-          </div>
-          <h3 class="card-title" id="title-tiramisu">Tiramisu</h3>
-          <p class="card-desc" id="desc-tiramisu">Ladyfingers soaked in espresso, layered with mascarpone cream and dusted with cocoa.</p>
-          <div class="card-ingredients" id="ing-tiramisu">
-            <span>Mascarpone</span><span>Espresso</span><span>Sugar</span><span>Cocoa</span>
-          </div>
-          <div class="card-footer">
-            <span class="card-price">$7.00</span>
-            <button class="btn-add">Add to cart</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- COOKIE -->
-      <div class="card" data-category="cookie">
-        <div class="card-image">
-          <div class="card-emoji">🍪</div>
-          <div class="card-badge" id="badge-cookie">Classic</div>
-        </div>
-        <div class="card-body">
-          <div class="card-meta">
-            <span class="card-tag" id="tag-cookie">Classic</span>
-            <span class="card-cal" id="cal-cookie">280 kcal</span>
-          </div>
-          <h3 class="card-title" id="title-cookie">Choco Chip Cookie</h3>
-          <p class="card-desc" id="desc-cookie">Bakery-style cookies — crisp edges, chewy center, loaded with real chocolate chips.</p>
-          <div class="card-ingredients" id="ing-cookie">
-            <span>Butter</span><span>Brown Sugar</span><span>Flour</span><span>Chocolate Chips</span>
-          </div>
-          <div class="card-footer">
-            <span class="card-price">$3.00</span>
-            <button class="btn-add">Add to cart</button>
-          </div>
-        </div>
-      </div>
-
-    </div>
+    <div class="menu-grid" id="menuGrid"></div>
   </section>
 
   <!-- FIT CALLOUT BANNER -->
@@ -235,21 +127,9 @@
         <a href="#" class="btn btn-primary" id="bannerBtn" onclick="setMode('fit'); return false;">Switch to Fit Mode</a>
       </div>
       <div class="fit-banner-icons">
-        <div class="fit-icon-card">
-          <span>🌰</span>
-          <p>Almond Flour</p>
-          <small>High protein, low carb</small>
-        </div>
-        <div class="fit-icon-card">
-          <span>🍃</span>
-          <p>Zero-Cal Sugar</p>
-          <small>Erythritol & Stevia</small>
-        </div>
-        <div class="fit-icon-card">
-          <span>💪</span>
-          <p>Same Taste</p>
-          <small>No compromise</small>
-        </div>
+        <div class="fit-icon-card"><span>🌰</span><p>Almond Flour</p><small>High protein, low carb</small></div>
+        <div class="fit-icon-card"><span>🍃</span><p>Zero-Cal Sugar</p><small>Erythritol & Stevia</small></div>
+        <div class="fit-icon-card"><span>💪</span><p>Same Taste</p><small>No compromise</small></div>
       </div>
     </div>
   </section>
@@ -260,7 +140,7 @@
       <div class="about-text">
         <p class="section-eyebrow">Our Story</p>
         <h2 class="section-title">Born from a love of<br><em>eating it all.</em></h2>
-        <p>We started Dulce Studio because we refused to choose between eating well and eating beautifully. Every recipe exists in two worlds — our <strong class="text-normal">Sweet</strong> side for pure indulgence, and our <strong class="text-fit">Fit</strong> side for mindful moments that never feel like a compromise.</p>
+        <p>We started Sweet Passport because we refused to choose between eating well and eating beautifully. Every recipe exists in two worlds — our <strong class="text-normal">Sweet</strong> side for pure indulgence, and our <strong class="text-fit">Fit</strong> side for mindful moments that never feel like a compromise.</p>
         <p>Both are baked fresh every morning, with real ingredients, real technique, and a ridiculous amount of care.</p>
         <a href="#order" class="btn btn-primary">Start your order</a>
       </div>
@@ -284,30 +164,20 @@
       <p class="section-eyebrow">Ready?</p>
       <h2 class="section-title">Place your order today.</h2>
       <p>Fresh-baked to order. Available for pickup and local delivery.</p>
-      <div class="order-form">
-        <input type="text" placeholder="Your name" class="order-input" />
-        <input type="text" placeholder="Phone or email" class="order-input" />
-        <select class="order-input order-select">
-          <option value="">Choose your style…</option>
-          <option>Sweet — Classic Desserts</option>
-          <option>Fit — Guilt-Free Versions</option>
-          <option>Both (I can't choose!)</option>
-        </select>
-        <button class="btn btn-primary order-btn">Send My Order</button>
-      </div>
+      <button class="btn btn-primary" onclick="openCart()" style="margin-top:8px;">View Cart & Checkout</button>
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer class="footer">
-    <div class="footer-logo">dulce <span class="logo-accent">studio</span></div>
+    <div class="footer-logo">sweet <span class="logo-accent">passport</span></div>
     <p>Handcrafted pastries, made with love — both sides of the menu.</p>
     <div class="footer-links">
       <a href="#">Instagram</a>
       <a href="#">Menu PDF</a>
       <a href="#">Contact</a>
     </div>
-    <p class="footer-copy">© 2026 Dulce Studio. All rights reserved.</p>
+    <p class="footer-copy">© 2026 Sweet Passport. All rights reserved.</p>
   </footer>
 
   <script src="app.js"></script>
